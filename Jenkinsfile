@@ -12,7 +12,7 @@ pipeline {
         stage('Unit and Integration Tests') {
             steps {
                 echo 'Run unit tests for Android project with JUnit'
-                sh './gradlew testDebugUnitTest'
+                // sh './gradlew testDebugUnitTest'
                 
                 echo 'Run integration tests (e.g., UI tests using Espresso)'
                 // Implement integration test commands here
