@@ -15,7 +15,7 @@ pipeline {
                 // sh './gradlew testDebugUnitTest'
                 
                 echo 'Run integration tests (e.g., UI tests using Espresso)'
-                // Implement integration test commands here
+                // Implement integration test commands here.
             }
         }
         
