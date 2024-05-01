@@ -17,6 +17,27 @@ pipeline {
                 echo 'Run integration tests (e.g., UI tests using Espresso)'
                 // Implement integration test commands here
             }
+
+            post {
+                success {
+                    echo 'JUnit and Espresso tests completed successfully'
+                    emailext(
+                        to: 'amehugochukwu@gmail.com',
+                        subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
+                        body:'Log files are attached for additional information about the process',
+                        attachLog: true
+                    )
+                }
+                failure {
+                    echo 'JUnit and Espresso tests failed'
+                    emailext(
+                        to: 'amehugochukwu@gmail.com',
+                        subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
+                        body:'Log files are attached for additional information about the process',
+                        attachLog: true
+                    )
+                }
+            }
         }
         
         stage('Code Analysis') {
@@ -30,6 +51,27 @@ pipeline {
             steps {
                 echo 'Perform security scan using a tool like OWASP Dependency-Check'
                 // Implement security scan commands here
+            }
+
+            post {
+                success {
+                    echo 'Security Scan completed successfully'
+                    emailext(
+                        to: 'amehugochukwu@gmail.com',
+                        subject:"The status of the Security Scan: ${currentBuild.result}",
+                        body:'Log files are attached for additional information about the process',
+                        attachLog: true
+                    )
+                }
+                failure {
+                    echo 'Security Scan failed'
+                    emailext(
+                        to: 'amehugochukwu@gmail.com',
+                        subject:"The status of the Security Scan: ${currentBuild.result}",
+                        body:'Log files are attached for additional information about the process',
+                        attachLog: true
+                    )
+                }
             }
         }
         
@@ -52,23 +94,6 @@ pipeline {
                 echo 'Deploy the Android application to a production server (e.g., Firebase App Distribution)'
                 // Implement production deployment commands here
             }
-        }
-    }
-    
-    post {
-        success {
-            // Send notification email on successful pipeline execution
-            emailext subject: 'Pipeline Success',
-                      body: 'Pipeline completed successfully.',
-                      to: 'amehugochukwu@gmail.com',
-                      attachmentsPattern: '**/*'
-        }
-        failure {
-            // Send notification email on failed pipeline execution
-            emailext subject: 'Pipeline Failure',
-                      body: 'Pipeline failed to execute.',
-                      to: 'amehugochukwu@gmail.com',
-                      attachmentsPattern: '**/*'
         }
     }
 }
