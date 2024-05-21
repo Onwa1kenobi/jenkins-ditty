@@ -1,8 +1,8 @@
 pipeline {
     agent any
-//     environment {
-//         "GOOGLE_APPLICATION_CREDENTIALS=$HOME/app/jenkins-demo-1e5fd-firebase-adminsdk-poub4-eae87f326c.json"
-//     }
+    environment {
+        "GOOGLE_APPLICATION_CREDENTIALS=$HOME/app/jenkins-demo-1e5fd-firebase-adminsdk-poub4-eae87f326c.json"
+    }
     
     stages {
         stage('Build') {
