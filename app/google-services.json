@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "268642050630",
+    "project_id": "jenkins-demo-1e5fd",
+    "storage_bucket": "jenkins-demo-1e5fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268642050630:android:5c57dc947b61a3fd616047",
+        "android_client_info": {
+          "package_name": "io.ugochukwu.demoapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlOx720BcrH-lLKtesxzosSfQdY_2htBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
