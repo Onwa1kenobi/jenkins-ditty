@@ -5,39 +5,39 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Build Android project using Gradle'
-                // sh './gradlew clean assembleDebug'
+                sh './gradlew clean assembleDebug'
             }
         }
         
         stage('Unit and Integration Tests') {
             steps {
                 echo 'Run unit tests for Android project with JUnit'
-                // sh './gradlew testDebugUnitTest'
+                sh './gradlew app:test'
                 
                 echo 'Run integration tests (e.g., UI tests using Espresso)'
                 // Implement integration test commands here
             }
 
-            post {
-                success {
-                    echo 'JUnit and Espresso tests completed successfully'
-                    emailext(
-                        to: 'amehugochukwu@gmail.com',
-                        subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
-                        body:'Log files are attached for additional information about the process',
-                        attachLog: true
-                    )
-                }
-                failure {
-                    echo 'JUnit and Espresso tests failed'
-                    emailext(
-                        to: 'amehugochukwu@gmail.com',
-                        subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
-                        body:'Log files are attached for additional information about the process',
-                        attachLog: true
-                    )
-                }
-            }
+//             post {
+//                 success {
+//                     echo 'JUnit and Espresso tests completed successfully'
+//                     emailext(
+//                         to: 'amehugochukwu@gmail.com',
+//                         subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
+//                         body:'Log files are attached for additional information about the process',
+//                         attachLog: true
+//                     )
+//                 }
+//                 failure {
+//                     echo 'JUnit and Espresso tests failed'
+//                     emailext(
+//                         to: 'amehugochukwu@gmail.com',
+//                         subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
+//                         body:'Log files are attached for additional information about the process',
+//                         attachLog: true
+//                     )
+//                 }
+//             }
         }
         
         stage('Code Analysis') {
@@ -53,26 +53,26 @@ pipeline {
                 // Implement security scan commands here
             }
 
-            post {
-                success {
-                    echo 'Security Scan completed successfully'
-                    emailext(
-                        to: 'amehugochukwu@gmail.com',
-                        subject:"The status of the Security Scan: ${currentBuild.result}",
-                        body:'Log files are attached for additional information about the process',
-                        attachLog: true
-                    )
-                }
-                failure {
-                    echo 'Security Scan failed'
-                    emailext(
-                        to: 'amehugochukwu@gmail.com',
-                        subject:"The status of the Security Scan: ${currentBuild.result}",
-                        body:'Log files are attached for additional information about the process',
-                        attachLog: true
-                    )
-                }
-            }
+//             post {
+//                 success {
+//                     echo 'Security Scan completed successfully'
+//                     emailext(
+//                         to: 'amehugochukwu@gmail.com',
+//                         subject:"The status of the Security Scan: ${currentBuild.result}",
+//                         body:'Log files are attached for additional information about the process',
+//                         attachLog: true
+//                     )
+//                 }
+//                 failure {
+//                     echo 'Security Scan failed'
+//                     emailext(
+//                         to: 'amehugochukwu@gmail.com',
+//                         subject:"The status of the Security Scan: ${currentBuild.result}",
+//                         body:'Log files are attached for additional information about the process',
+//                         attachLog: true
+//                     )
+//                 }
+//             }
         }
         
         stage('Deploy to Staging') {
