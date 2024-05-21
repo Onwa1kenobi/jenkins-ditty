@@ -45,6 +45,21 @@ pipeline {
                 echo 'Integrate code analysis tool (e.g., SonarQube)'
                 // Implement code analysis commands here
             }
+
+            environment {
+                scannerHome = tool 'Sonar'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('Sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Demo Application \
+                            -Dsonar.projectName=Demo Application \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=."
+                    }
+                }
+            }
         }
         
         stage('Security Scan') {
