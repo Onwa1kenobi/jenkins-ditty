@@ -1,12 +1,16 @@
 pipeline {
     agent any
+    List environment = [
+        "GOOGLE_APPLICATION_CREDENTIALS=$HOME/app/jenkins-demo-1e5fd-firebase-adminsdk-poub4-eae87f326c.json"
+    ]
     
     stages {
         stage('Build') {
             steps {
                 echo 'Build Android project using Gradle'
                 sh './gradlew clean assembleDebug'
-                archiveArtifacts artifacts: '**/*.apk'
+                // Archive the APKs so that they can be downloaded from Jenkins
+                archiveArtifacts artifacts: '**/*.apk', fingerprint: false, allowEmptyArchive: false
             }
         }
         
@@ -18,27 +22,6 @@ pipeline {
                 echo 'Run integration tests (e.g., UI tests using Espresso)'
                 // Implement integration test commands here
             }
-
-//             post {
-//                 success {
-//                     echo 'JUnit and Espresso tests completed successfully'
-//                     emailext(
-//                         to: 'amehugochukwu@gmail.com',
-//                         subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
-//                         body:'Log files are attached for additional information about the process',
-//                         attachLog: true
-//                     )
-//                 }
-//                 failure {
-//                     echo 'JUnit and Espresso tests failed'
-//                     emailext(
-//                         to: 'amehugochukwu@gmail.com',
-//                         subject:"The status of the Unit and Integration Tests: ${currentBuild.result}",
-//                         body:'Log files are attached for additional information about the process',
-//                         attachLog: true
-//                     )
-//                 }
-//             }
         }
         
         stage('Code Analysis') {
@@ -89,7 +72,12 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 echo 'Deploy the Android application to a staging server (e.g., Firebase App Distribution)'
-                // Implement deployment commands here
+                steps {
+                    archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: false, allowEmptyArchive: false
+                    withEnv(environment) {
+                        sh './gradlew assembleRelease appDistributionUploadRelease'
+                    }
+                }
             }
         }
         
@@ -103,7 +91,10 @@ pipeline {
         stage('Deploy to Production') {
             steps {
                 echo 'Deploy the Android application to a production server (e.g., Firebase App Distribution)'
-                // Implement production deployment commands here
+                archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: false, allowEmptyArchive: false
+                withEnv(environment) {
+                    sh './gradlew assembleRelease appDistributionUploadRelease'
+                }
             }
         }
     }
