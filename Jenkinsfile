@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = credentials('jenkins-google-credentials')
+        GOOGLE_PROJECT_ID = 'jenkins-demo-1e5fd'
     }
     
     stages {
@@ -20,10 +21,27 @@ pipeline {
             }
         }
 
-        stage('UI Tests with Espresso') {
+        stage('Authorize gcloud') {
             steps {
-                echo 'Run UI tests using Espresso'
+                echo 'Authorize gcloud and set config defaults'
+                sh '''
+                    sudo gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                    sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+                '''
+            }
+        }
+
+        stage('UI Instrumentation Tests with Espresso on Firebase Test Lab') {
+            steps {
+                echo 'Run UI tests using Espresso with Firebase Test Lab'
                 sh './gradlew connectedAndroidTest'
+                sh '''
+                    sudo gcloud firebase test android run \
+                    --type instrumentation \
+                    --device model=Nexus5X,orientation=portrait,locale=en,version=26 \
+                    --app ./app/build/outputs/apk/debug/app-debug.apk \
+                    --test ./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+                '''
             }
             post {
                 always {
@@ -35,6 +53,23 @@ pipeline {
                 }
                 failure {
                     echo 'UI tests failed'
+                }
+            }
+        }
+
+        stage('Code Analysis') {
+            environment {
+                scannerHome = tool 'Sonar'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('Sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=Demo-Application \
+                            -Dsonar.projectName='Demo Application' \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=."
+                    }
                 }
             }
         }
