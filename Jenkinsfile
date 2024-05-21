@@ -73,7 +73,7 @@ pipeline {
             steps {
                 echo 'Deploy the Android application to a staging server (e.g., Firebase App Distribution)'
                 steps {
-                    archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: false, allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk'
                     withEnv(environment) {
                         sh './gradlew assembleRelease appDistributionUploadRelease'
                     }
