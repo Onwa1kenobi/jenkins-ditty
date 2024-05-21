@@ -6,6 +6,7 @@ pipeline {
             steps {
                 echo 'Build Android project using Gradle'
                 sh './gradlew clean assembleDebug'
+                archiveArtifacts artifacts: '**/*.apk'
             }
         }
         
