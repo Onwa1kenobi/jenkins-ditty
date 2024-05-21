@@ -41,11 +41,6 @@ pipeline {
         }
         
         stage('Code Analysis') {
-            steps {
-                echo 'Integrate code analysis tool (e.g., SonarQube)'
-                // Implement code analysis commands here
-            }
-
             environment {
                 scannerHome = tool 'Sonar'
             }
