@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GOOGLE_APPLICATION_CREDENTIALS="$HOME/app/jenkins-demo-1e5fd-firebase-adminsdk-poub4-eae87f326c.json"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('jenkins-google-credentials')
     }
     
     stages {
@@ -74,9 +74,7 @@ pipeline {
                 echo 'Deploy the Android application to a staging server (e.g., Firebase App Distribution)'
                 sh './gradlew assembleRelease'
                 archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: false, allowEmptyArchive: false
-                withEnv(environment) {
-                    sh './gradlew assembleRelease appDistributionUploadRelease'
-                }
+                sh './gradlew assembleRelease appDistributionUploadRelease'
             }
         }
         
@@ -91,9 +89,7 @@ pipeline {
             steps {
                 echo 'Deploy the Android application to a production server (e.g., Firebase App Distribution)'
                 archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: false, allowEmptyArchive: false
-                withEnv(environment) {
-                    sh './gradlew assembleRelease appDistributionUploadRelease'
-                }
+                sh './gradlew assembleRelease appDistributionUploadRelease'
             }
         }
     }
