@@ -6,6 +6,17 @@ pipeline {
     }
     
     stages {
+        stage('Setup') {
+            steps {
+                echo 'Copy necessary files'
+                fileOperations([fileCopyOperation(
+                  excludes: '',
+                  flattenFiles: false,
+                  includes: "${GOOGLE_APPLICATION_CREDENTIALS}",
+                  targetLocation: "./GOOGLE_APPLICATION_CREDENTIALS.json"
+                )])
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Build Android project using Gradle'
@@ -25,6 +36,7 @@ pipeline {
             steps {
                 echo 'Authorize gcloud and set config defaults'
                 sh '''
+                    sudo gcloud auth activate-service-account --key-file=./GOOGLE_APPLICATION_CREDENTIALS.json
                     sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
                 '''
             }
