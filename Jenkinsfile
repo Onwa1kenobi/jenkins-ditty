@@ -35,10 +35,8 @@ pipeline {
         stage('Authorize gcloud') {
             steps {
                 echo 'Authorize gcloud and set config defaults'
-                sh '''
-                    sudo gcloud auth activate-service-account --key-file=./GOOGLE_APPLICATION_CREDENTIALS.json
-                    sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-                '''
+                sh 'sudo gcloud auth activate-service-account --key-file=**/GOOGLE_APPLICATION_CREDENTIALS.json'
+                sh 'sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}'
             }
         }
 
