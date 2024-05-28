@@ -12,8 +12,8 @@ pipeline {
                 fileOperations([fileCopyOperation(
                   excludes: '',
                   flattenFiles: false,
-                  includes: "${GOOGLE_APPLICATION_CREDENTIALS}",
-                  targetLocation: "./GOOGLE_APPLICATION_CREDENTIALS.json"
+                  includes: '${GOOGLE_APPLICATION_CREDENTIALS}',
+                  targetLocation: "**/GOOGLE_APPLICATION_CREDENTIALS.json"
                 )])
             }
         }
