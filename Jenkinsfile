@@ -9,12 +9,12 @@ pipeline {
         stage('Setup') {
             steps {
                 echo 'Copy necessary files'
-                fileOperations([fileCopyOperation(
-                  excludes: '',
-                  flattenFiles: false,
-                  includes: '${GOOGLE_APPLICATION_CREDENTIALS}',
-                  targetLocation: "**/GOOGLE_APPLICATION_CREDENTIALS.json"
-                )])
+                fileOperations([
+                    fileCreateOperation(
+                        fileName: "**/GOOGLE_APPLICATION_CREDENTIALS.json",
+                        fileContent: '${GOOGLE_APPLICATION_CREDENTIALS}'
+                    )
+                ])
             }
         }
         stage('Build') {
