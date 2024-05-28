@@ -11,7 +11,7 @@ pipeline {
                 echo 'Copy necessary files'
                 fileOperations([
                     fileCreateOperation(
-                        fileName: "**/GOOGLE_APPLICATION_CREDENTIALS.json",
+                        fileName: "GOOGLE_APPLICATION_CREDENTIALS.json",
                         fileContent: '${GOOGLE_APPLICATION_CREDENTIALS}'
                     )
                 ])
@@ -35,8 +35,8 @@ pipeline {
         stage('Authorize gcloud') {
             steps {
                 echo 'Authorize gcloud and set config defaults'
-                sh 'sudo gcloud auth activate-service-account --key-file=**/GOOGLE_APPLICATION_CREDENTIALS.json'
-                sh 'sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}'
+                sh 'gcloud auth activate-service-account --key-file=GOOGLE_APPLICATION_CREDENTIALS.json'
+                sh 'gcloud --quiet config set project ${GOOGLE_PROJECT_ID}'
             }
         }
 
