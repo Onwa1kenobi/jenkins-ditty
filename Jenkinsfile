@@ -35,8 +35,8 @@ pipeline {
         stage('Authorize gcloud') {
             steps {
                 echo 'Authorize gcloud and set config defaults'
-                sh 'gcloud auth activate-service-account --key-file=GOOGLE_APPLICATION_CREDENTIALS.json'
-                sh 'gcloud --quiet config set project ${GOOGLE_PROJECT_ID}'
+                sh '${GCLOUD_PATH}/gcloud auth activate-service-account --key-file=GOOGLE_APPLICATION_CREDENTIALS.json'
+                sh '${GCLOUD_PATH}/gcloud --quiet config set project ${GOOGLE_PROJECT_ID}'
             }
         }
 
@@ -45,17 +45,17 @@ pipeline {
                 echo 'Run UI tests using Espresso with Firebase Test Lab'
                 sh './gradlew connectedAndroidTest'
                 sh '''
-                    sudo gcloud firebase test android run \
+                    ${GCLOUD_PATH}/gcloud firebase test android run \
                     --type instrumentation \
-                    --device model=Nexus5X,orientation=portrait,locale=en,version=26 \
+                    --device model=Pixel3,orientation=portrait,locale=en,version=30 \
                     --app ./app/build/outputs/apk/debug/app-debug.apk \
                     --test ./app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
                 '''
             }
             post {
                 always {
-                    junit '**/build/test-results/connected/*.xml'
-                    archiveArtifacts artifacts: '**/build/outputs/reports/androidTests/connected/*', allowEmptyArchive: true
+                    junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
+                    archiveArtifacts artifacts: '**/*.xml', allowEmptyArchive: true
                 }
                 success {
                     echo 'UI tests passed'
@@ -74,9 +74,9 @@ pipeline {
                 script {
                     withSonarQubeEnv('Sonar') {
                         sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=Demo-Application \
+                            -Dsonar.projectKey=jenkins-demo \
                             -Dsonar.projectName='Demo Application' \
-                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.projectVersion=${BUILD_NUMBER} \
                             -Dsonar.sources=."
                     }
                 }
